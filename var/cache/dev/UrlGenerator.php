@@ -4,8 +4,10 @@
 
 return [
     '_twig_error_test' => [['code', '_format'], ['_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'], ['code' => '\\d+'], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', '\\d+', 'code', true], ['text', '/_error']], [], []],
-    'register' => [[], ['_controller' => 'App\\Controller\\ApiController::register'], [], [['text', '/api/register']], [], []],
+    'ajout' => [[], ['_controller' => 'App\\Controller\\ApiController::ajoutp'], [], [['text', '/api/ajoutp']], [], []],
     'adduser' => [[], ['_controller' => 'App\\Controller\\ApiController::new'], [], [['text', '/api/new']], [], []],
+    'register' => [[], ['_controller' => 'App\\Controller\\ApiController::register'], [], [['text', '/api/register']], [], []],
+    'login' => [[], ['_controller' => 'App\\Controller\\ApiController::login'], [], [['text', '/api/login']], [], []],
     'partenaire_index' => [[], ['_controller' => 'App\\Controller\\PartenaireController::index'], [], [['text', '/partenaire/']], [], []],
     'partenaire_new' => [[], ['_controller' => 'App\\Controller\\PartenaireController::new'], [], [['text', '/partenaire/new']], [], []],
     'partenaire_show' => [['id'], ['_controller' => 'App\\Controller\\PartenaireController::show'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/partenaire']], [], []],
@@ -39,4 +41,5 @@ return [
     'api_utilisateurs_get_item' => [['id', '_format'], ['_controller' => 'api_platform.action.get_item', '_format' => null, '_api_resource_class' => 'App\\Entity\\Utilisateurs', '_api_item_operation_name' => 'get'], [], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', '[^/\\.]++', 'id', true], ['text', '/api/utilisateurs']], [], []],
     'api_utilisateurs_delete_item' => [['id', '_format'], ['_controller' => 'api_platform.action.delete_item', '_format' => null, '_api_resource_class' => 'App\\Entity\\Utilisateurs', '_api_item_operation_name' => 'delete'], [], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', '[^/\\.]++', 'id', true], ['text', '/api/utilisateurs']], [], []],
     'api_utilisateurs_put_item' => [['id', '_format'], ['_controller' => 'api_platform.action.put_item', '_format' => null, '_api_resource_class' => 'App\\Entity\\Utilisateurs', '_api_item_operation_name' => 'put'], [], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', '[^/\\.]++', 'id', true], ['text', '/api/utilisateurs']], [], []],
+    'api_login_check' => [[], [], [], [['text', '/api/login_check']], [], []],
 ];

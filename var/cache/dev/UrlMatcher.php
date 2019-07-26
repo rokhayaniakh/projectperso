@@ -8,10 +8,13 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
-        '/api/register' => [[['_route' => 'register', '_controller' => 'App\\Controller\\ApiController::register'], null, ['POST' => 0], null, false, false, null]],
+        '/api/ajoutp' => [[['_route' => 'ajout', '_controller' => 'App\\Controller\\ApiController::ajoutp'], null, ['POST' => 0], null, false, false, null]],
         '/api/new' => [[['_route' => 'adduser', '_controller' => 'App\\Controller\\ApiController::new'], null, ['POST' => 0], null, false, false, null]],
+        '/api/register' => [[['_route' => 'register', '_controller' => 'App\\Controller\\ApiController::register'], null, ['POST' => 0], null, false, false, null]],
+        '/api/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\ApiController::login'], null, ['POST' => 0], null, false, false, null]],
         '/partenaire' => [[['_route' => 'partenaire_index', '_controller' => 'App\\Controller\\PartenaireController::index'], null, ['GET' => 0], null, true, false, null]],
         '/partenaire/new' => [[['_route' => 'partenaire_new', '_controller' => 'App\\Controller\\PartenaireController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
