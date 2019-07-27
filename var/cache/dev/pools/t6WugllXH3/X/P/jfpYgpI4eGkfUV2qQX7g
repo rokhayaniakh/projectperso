@@ -13,6 +13,7 @@
                         'montant',
                         'partenaires',
                         'idpartenaire',
+                        'numbcompte',
                     ],
                 ],
             ],

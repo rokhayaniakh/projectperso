@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Partenaire;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -52,6 +53,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresse;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\partenaire", inversedBy="users")
+     */
+    private $idpartenaire;
 
     public function getId(): ?int
     {
@@ -170,6 +176,18 @@ class User implements UserInterface
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getIdpartenaire(): ?partenaire
+    {
+        return $this->idpartenaire;
+    }
+
+    public function setIdpartenaire(?partenaire $idpartenaire): self
+    {
+        $this->idpartenaire = $idpartenaire;
 
         return $this;
     }

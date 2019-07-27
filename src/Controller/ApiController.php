@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Entity\Partenaire;
+use App\Entity\partenaire;
 use App\Entity\Compte;
 use App\Entity\Utilisateurs;
 use App\Entity\Profil;
@@ -82,7 +82,8 @@ class ApiController extends AbstractController
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setRoles(['ROLE_ADMIN']);
-            // $user->setRoles($user->getRoles());
+            $part=$this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
+            $user->setIdpartenaire($part);
             $user->setNomcomplet($values->nomcomplet);
             $user->setMail($values->mail);
             $user-> setTel($values->tel);
@@ -101,7 +102,6 @@ class ApiController extends AbstractController
                 'status' => 201,
                 'message' => 'L\'utilisateur a été créé'
             ];
-
             return new JsonResponse($data, 201);
         }
         $data = [
@@ -121,4 +121,27 @@ class ApiController extends AbstractController
             'roles'=>$user->getRoles()
         ]);
     }
+    // /** 
+    //  * @Route("/ajoutcompte ,name="ajoutcompte", methods={"POST"})
+    //  */
+    // public function ajoutcompt(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager){
+    //     $values = json_decode($request->getContent());
+    //     if (isset($values->montant, $values->numbcompte)) {
+    //         $compt = new Compte();
+    //         $compt->set($values->montant);
+    //         $compt->set($values->numbcompte);
+    //         $entityManager->persist($compt);
+    //         $entityManager->flush();
+    //         $data = [
+    //             'status' => 201,
+    //             'message' => 'bien inserer'
+    //         ];
+    //         return new JsonResponse($data, 201);
+    //     }
+    //     $data = [
+    //         'status' => 500,
+    //         'message' => 'Erreur!!'
+    //     ];
+    //     return new JsonResponse($data, 500);
+    // }
 }

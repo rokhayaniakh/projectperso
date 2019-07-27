@@ -35,6 +35,11 @@ class Compte
      */
     private $idpartenaire;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numbcompte;
+
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
@@ -96,6 +101,18 @@ class Compte
     public function setIdpartenaire(?partenaire $idpartenaire): self
     {
         $this->idpartenaire = $idpartenaire;
+
+        return $this;
+    }
+
+    public function getNumbcompte(): ?int
+    {
+        return $this->numbcompte;
+    }
+
+    public function setNumbcompte(?int $numbcompte): self
+    {
+        $this->numbcompte = $numbcompte;
 
         return $this;
     }
