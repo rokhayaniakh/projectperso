@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ class ApiController extends AbstractController
 {
     /**
      * @Route("/ajoutp",name="ajout",methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function ajoutp(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
@@ -70,6 +72,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/register", name="register", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -78,7 +81,8 @@ class ApiController extends AbstractController
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $user->setRoles($user->getRoles());
+            $user->setRoles(['ROLE_ADMIN']);
+            // $user->setRoles($user->getRoles());
             $user->setNomcomplet($values->nomcomplet);
             $user->setMail($values->mail);
             $user-> setTel($values->tel);
@@ -114,7 +118,6 @@ class ApiController extends AbstractController
         $user=$this->getUser();
         return $this->json([
             'username'=>$user->getUsername(),
-
             'roles'=>$user->getRoles()
         ]);
     }

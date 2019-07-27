@@ -105,54 +105,6 @@ class Partenaire
         return $this;
     }
 
-    // /**
-    //  * @return Collection|Utilisateurs[]
-    //  */
-    // public function getUtilisateurs(): Collection
-    // {
-    //     return $this->utilisateurs;
-    // }
-
-    // public function addUtilisateur(Utilisateurs $utilisateur): self
-    // {
-    //     if (!$this->utilisateurs->contains($utilisateur)) {
-    //         $this->utilisateurs[] = $utilisateur;
-    //         $utilisateur->setIdpartenaire($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeUtilisateur(Utilisateurs $utilisateur): self
-    // {
-    //     if ($this->utilisateurs->contains($utilisateur)) {
-    //         $this->utilisateurs->removeElement($utilisateur);
-    //         // set the owning side to null (unless already changed)
-    //         if ($utilisateur->getIdpartenaire() === $this) {
-    //             $utilisateur->setIdpartenaire(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
-    // /**
-    //  * @return Collection|Compte[]
-    //  */
-    // public function getComptes(): Collection
-    // {
-    //     return $this->comptes;
-    // }
-
-    // public function addCompte(Compte $compte): self
-    // {
-    //     if (!$this->comptes->contains($compte)) {
-    //         $this->comptes[] = $compte;
-    //         $compte->setIdpartenaire($this);
-    //     }
-
-    //     return $this;
-    // }
 
     public function removeCompte(Compte $compte): self
     {
