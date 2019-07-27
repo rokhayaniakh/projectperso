@@ -15,6 +15,7 @@
                         'ninea',
                         'adresse',
                         'utilisateurs',
+                        'comptes',
                     ],
                 ],
             ],

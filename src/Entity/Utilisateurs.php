@@ -4,13 +4,14 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Partenaire;
+// use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateursRepository")
  */
-class Utilisateurs   implements UserInterface
+class Utilisateurs   
 {
     /**
      * @ORM\Id()
@@ -45,21 +46,6 @@ class Utilisateurs   implements UserInterface
      * @ORM\JoinColumn(nullable=true)
      */
     private $idpartenaire;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $roles;
 
     public function getId(): ?int
     {
@@ -134,41 +120,7 @@ class Utilisateurs   implements UserInterface
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getRoles(): ?string
-    {
-        return $this->roles;
-    }
-
-    public function setRoles(string $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
+    
     /**
      * @see UserInterface
      */

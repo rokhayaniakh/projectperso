@@ -30,6 +30,11 @@ class Compte
      */
     private $partenaires;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\partenaire", inversedBy="comptes")
+     */
+    private $idpartenaire;
+
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
@@ -79,6 +84,18 @@ class Compte
                 $partenaire->setIdcompte(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdpartenaire(): ?partenaire
+    {
+        return $this->idpartenaire;
+    }
+
+    public function setIdpartenaire(?partenaire $idpartenaire): self
+    {
+        $this->idpartenaire = $idpartenaire;
 
         return $this;
     }

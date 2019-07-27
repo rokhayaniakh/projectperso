@@ -17,6 +17,12 @@
                 'writable' => [
                     true,
                 ],
+                'readableLink' => [
+                    false,
+                ],
+                'writableLink' => [
+                    false,
+                ],
                 'required' => [
                     false,
                 ],
@@ -29,10 +35,13 @@
             ],
             'Symfony\\Component\\PropertyInfo\\Type' => [
                 'builtinType' => [
-                    1 => 'string',
+                    1 => 'object',
                 ],
                 'nullable' => [
-                    1 => false,
+                    1 => true,
+                ],
+                'class' => [
+                    1 => 'App\\Entity\\partenaire',
                 ],
                 'collection' => [
                     1 => false,

@@ -12,6 +12,7 @@
                         'id',
                         'montant',
                         'partenaires',
+                        'idpartenaire',
                     ],
                 ],
             ],
