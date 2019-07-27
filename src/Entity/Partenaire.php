@@ -39,10 +39,8 @@ class Partenaire
      * @ORM\Column(type="string", length=255)
      */
     private $adresse;
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateurs", mappedBy="idpartenaire")
-     */
-    private $utilisateurs;
+
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="idpartenaire")
@@ -51,7 +49,6 @@ class Partenaire
 
     public function __construct()
     {
-        $this->utilisateurs = new ArrayCollection();
         $this->comptes = new ArrayCollection();
     }
 
@@ -108,54 +105,54 @@ class Partenaire
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
+    // /**
+    //  * @return Collection|Utilisateurs[]
+    //  */
+    // public function getUtilisateurs(): Collection
+    // {
+    //     return $this->utilisateurs;
+    // }
 
-    public function addUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setIdpartenaire($this);
-        }
+    // public function addUtilisateur(Utilisateurs $utilisateur): self
+    // {
+    //     if (!$this->utilisateurs->contains($utilisateur)) {
+    //         $this->utilisateurs[] = $utilisateur;
+    //         $utilisateur->setIdpartenaire($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if ($this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->removeElement($utilisateur);
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getIdpartenaire() === $this) {
-                $utilisateur->setIdpartenaire(null);
-            }
-        }
+    // public function removeUtilisateur(Utilisateurs $utilisateur): self
+    // {
+    //     if ($this->utilisateurs->contains($utilisateur)) {
+    //         $this->utilisateurs->removeElement($utilisateur);
+    //         // set the owning side to null (unless already changed)
+    //         if ($utilisateur->getIdpartenaire() === $this) {
+    //             $utilisateur->setIdpartenaire(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getComptes(): Collection
-    {
-        return $this->comptes;
-    }
+    // /**
+    //  * @return Collection|Compte[]
+    //  */
+    // public function getComptes(): Collection
+    // {
+    //     return $this->comptes;
+    // }
 
-    public function addCompte(Compte $compte): self
-    {
-        if (!$this->comptes->contains($compte)) {
-            $this->comptes[] = $compte;
-            $compte->setIdpartenaire($this);
-        }
+    // public function addCompte(Compte $compte): self
+    // {
+    //     if (!$this->comptes->contains($compte)) {
+    //         $this->comptes[] = $compte;
+    //         $compte->setIdpartenaire($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function removeCompte(Compte $compte): self
     {

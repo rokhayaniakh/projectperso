@@ -79,6 +79,10 @@ class ApiController extends AbstractController
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setRoles($user->getRoles());
+            $user->setNomcomplet($values->nomcomplet);
+            $user->setMail($values->mail);
+            $user-> setTel($values->tel);
+            $user-> getAdresse($values->adresse);
             $errors = $validator->validate($user);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');

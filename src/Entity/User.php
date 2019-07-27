@@ -33,6 +33,26 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomcomplet;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mail;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $tel;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adresse;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,5 +124,53 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getNomcomplet(): ?string
+    {
+        return $this->nomcomplet;
+    }
+
+    public function setNomcomplet(?string $nomcomplet): self
+    {
+        $this->nomcomplet = $nomcomplet;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(?string $mail): self
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getTel(): ?int
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?int $tel): self
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): self
+    {
+        $this->adresse = $adresse;
+
+        return $this;
     }
 }

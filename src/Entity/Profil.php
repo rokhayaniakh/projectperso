@@ -25,15 +25,6 @@ class Profil
      */
     private $libelle;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateurs", mappedBy="idprofil")
-     */
-    private $utilisateurs;
-
-    public function __construct()
-    {
-        $this->utilisateurs = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -52,34 +43,4 @@ class Profil
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setIdprofil($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if ($this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->removeElement($utilisateur);
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getIdprofil() === $this) {
-                $utilisateur->setIdprofil(null);
-            }
-        }
-
-        return $this;
-    }
 }
