@@ -8,6 +8,7 @@ return [
     'register' => [[], ['_controller' => 'App\\Controller\\ApiController::register'], [], [['text', '/api/register']], [], []],
     'login' => [[], ['_controller' => 'App\\Controller\\ApiController::login'], [], [['text', '/api/login']], [], []],
     'depot' => [[], ['_controller' => 'App\\Controller\\ApiController::depot'], [], [['text', '/api/depot']], [], []],
+    'update_phone' => [['id'], ['_controller' => 'App\\Controller\\ApiController::update'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/partenaire']], [], []],
     'partenaire_index' => [[], ['_controller' => 'App\\Controller\\PartenaireController::index'], [], [['text', '/partenaire/']], [], []],
     'partenaire_new' => [[], ['_controller' => 'App\\Controller\\PartenaireController::new'], [], [['text', '/partenaire/new']], [], []],
     'partenaire_show' => [['id'], ['_controller' => 'App\\Controller\\PartenaireController::show'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/partenaire']], [], []],

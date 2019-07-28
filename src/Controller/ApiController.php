@@ -17,6 +17,7 @@ use App\Entity\Compte;
 use App\Entity\Depot;
 use App\Entity\Profil;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\PartenaireType;
 
 /**
  * @Route("/api")
@@ -111,7 +112,7 @@ class ApiController extends AbstractController
      * @Route("/depot" , name="depot", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function depot(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager,SerializerInterface $serializer , ValidatorInterface $validator)
+    public function depot(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $values = json_decode($request->getContent());
         if (isset($values->montant)) {
@@ -121,17 +122,17 @@ class ApiController extends AbstractController
             $rec = $this->getDoctrine()->getRepository(Compte::class)->find($values->idcompte);
             $compt->setIdcompte($rec);
             $errors = $validator->validate($compt);
-            if (count($errors)){
-                $errors = $serializer->serialize($errors,'json');
-                return new Response($errors,500,[
-                    'Content-Type' =>'application/json'
+            if (count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
                 ]);
             }
             $entityManager->persist($compt);
             $entityManager->flush();
             $data = [
                 'status' => 201,
-                'message' => 'L\'utilisateur a été créé'
+                'message' => 'depot reussie'
             ];
             return new JsonResponse($data, 201);
         }
@@ -139,8 +140,35 @@ class ApiController extends AbstractController
             'status' => 500,
             'message' => 'Vous devez renseigner les clés username et password'
         ];
-        return new JsonResponse($data,500);
+        return new JsonResponse($data, 500);
     }
-
-    
+    // update
+    /**
+     * @Route("/partenaire/{id}", name="update_phone", methods={"PUT"})
+     */
+    public function update(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    {
+        $phoneUpdate = $entityManager->getRepository(Partenaire::class)->find($partenaire->getId());
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $value) {
+            if ($key && !empty($value)) {
+                $name = ucfirst($key);
+                $setter = 'set' . $name;
+                $phoneUpdate->$setter($value);
+            }
+        }
+        $errors = $validator->validate($phoneUpdate);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        $entityManager->flush();
+        $data = [
+            'status' => 200,
+            'message' => 'Le partenaire a bien été mis à jour'
+        ];
+        return new JsonResponse($data);
+    }
 }

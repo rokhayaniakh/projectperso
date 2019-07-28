@@ -22,7 +22,7 @@
             ],
             'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted' => [
                 'attributes' => [
-                    1 => 'ROLE_ADMIN',
+                    1 => 'SUPER_ADMIN',
                 ],
             ],
         ],
