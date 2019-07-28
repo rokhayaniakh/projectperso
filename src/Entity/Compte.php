@@ -40,9 +40,15 @@ class Compte
      */
     private $numbcompte;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="idcompte")
+     */
+    private $depots;
+
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
+        $this->depots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +119,37 @@ class Compte
     public function setNumbcompte(?int $numbcompte): self
     {
         $this->numbcompte = $numbcompte;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setIdcompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
+            // set the owning side to null (unless already changed)
+            if ($depot->getIdcompte() === $this) {
+                $depot->setIdcompte(null);
+            }
+        }
 
         return $this;
     }

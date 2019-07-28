@@ -13,6 +13,7 @@
                         'App\\Entity\\Compte',
                         'App\\Entity\\Superadmin',
                         'App\\Entity\\Profil',
+                        'App\\Entity\\Depot',
                     ],
                 ],
             ],

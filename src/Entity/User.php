@@ -55,7 +55,7 @@ class User implements UserInterface
     private $adresse;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\partenaire", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
      */
     private $idpartenaire;
 

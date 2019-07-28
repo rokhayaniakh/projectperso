@@ -14,8 +14,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\partenaire;
 use App\Entity\Compte;
-use App\Entity\Utilisateurs;
+use App\Entity\Depot;
 use App\Entity\Profil;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/api")
@@ -25,7 +26,7 @@ class ApiController extends AbstractController
 {
     /**
      * @Route("/ajoutp",name="ajout",methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("SUPER_ADMIN")
      */
     public function ajoutp(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
@@ -52,22 +53,6 @@ class ApiController extends AbstractController
         ];
         return new JsonResponse($data, 500);
     }
-
-    /**
-     * @Route("/new", name="adduser", methods={"POST"})
-     */
-    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager)
-    {
-        $phone = $serializer->deserialize($request->getContent(), Utilisateurs::class, 'json');
-        $entityManager->persist($phone);
-        $entityManager->flush();
-        $data = [
-            'status' => 201,
-            'message' => 'le user a bien été ajouté'
-        ];
-        return new JsonResponse($data, 201);
-    }
-
     // authentification
 
     /**
@@ -81,13 +66,14 @@ class ApiController extends AbstractController
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $user->setRoles(['ROLE_ADMIN']);
-            $part=$this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
+            $user->setRoles($user->getRoles());
+            // $user->setRoles(['ROLE_ADMIN']);
+            $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
             $user->setIdpartenaire($part);
             $user->setNomcomplet($values->nomcomplet);
             $user->setMail($values->mail);
-            $user-> setTel($values->tel);
-            $user-> getAdresse($values->adresse);
+            $user->setTel($values->tel);
+            $user->getAdresse($values->adresse);
             $errors = $validator->validate($user);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
@@ -115,33 +101,46 @@ class ApiController extends AbstractController
      */
     public function login(Request $request)
     {
-        $user=$this->getUser();
+        $user = $this->getUser();
         return $this->json([
-            'username'=>$user->getUsername(),
-            'roles'=>$user->getRoles()
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles()
         ]);
     }
-    // /** 
-    //  * @Route("/ajoutcompte ,name="ajoutcompte", methods={"POST"})
-    //  */
-    // public function ajoutcompt(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager){
-    //     $values = json_decode($request->getContent());
-    //     if (isset($values->montant, $values->numbcompte)) {
-    //         $compt = new Compte();
-    //         $compt->set($values->montant);
-    //         $compt->set($values->numbcompte);
-    //         $entityManager->persist($compt);
-    //         $entityManager->flush();
-    //         $data = [
-    //             'status' => 201,
-    //             'message' => 'bien inserer'
-    //         ];
-    //         return new JsonResponse($data, 201);
-    //     }
-    //     $data = [
-    //         'status' => 500,
-    //         'message' => 'Erreur!!'
-    //     ];
-    //     return new JsonResponse($data, 500);
-    // }
+    /** 
+     * @Route("/depot" , name="depot", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function depot(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager,SerializerInterface $serializer , ValidatorInterface $validator)
+    {
+        $values = json_decode($request->getContent());
+        if (isset($values->montant)) {
+            $compt = new Depot();
+            $compt->setMontant($values->montant);
+            $compt->setDate(new \DateTime());
+            $rec = $this->getDoctrine()->getRepository(Compte::class)->find($values->idcompte);
+            $compt->setIdcompte($rec);
+            $errors = $validator->validate($compt);
+            if (count($errors)){
+                $errors = $serializer->serialize($errors,'json');
+                return new Response($errors,500,[
+                    'Content-Type' =>'application/json'
+                ]);
+            }
+            $entityManager->persist($compt);
+            $entityManager->flush();
+            $data = [
+                'status' => 201,
+                'message' => 'L\'utilisateur a été créé'
+            ];
+            return new JsonResponse($data, 201);
+        }
+        $data = [
+            'status' => 500,
+            'message' => 'Vous devez renseigner les clés username et password'
+        ];
+        return new JsonResponse($data,500);
+    }
+
+    
 }
