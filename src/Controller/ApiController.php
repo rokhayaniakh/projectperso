@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\PartenaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Entity\partenaire;
+use App\Entity\Partenaire;
 use App\Entity\Compte;
 use App\Entity\Depot;
 use App\Entity\Profil;
@@ -27,7 +28,7 @@ class ApiController extends AbstractController
 {
     /**
      * @Route("/ajoutp",name="ajout",methods={"POST"})
-     * @IsGranted("SUPER_ADMIN")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function ajoutp(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
@@ -68,7 +69,7 @@ class ApiController extends AbstractController
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setRoles($user->getRoles());
-            // $user->setRoles(['ROLE_ADMIN']);
+            // $user->setRoles(['ROLE_SUPER_ADMIN']);
             $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
             $user->setIdpartenaire($part);
             $user->setNomcomplet($values->nomcomplet);
@@ -93,7 +94,7 @@ class ApiController extends AbstractController
         }
         $data = [
             'status' => 500,
-            'message' => 'Vous devez renseigner les clés username et password'
+            'message' => 'Erreur'
         ];
         return new JsonResponse($data, 500);
     }
@@ -111,6 +112,7 @@ class ApiController extends AbstractController
     /** 
      * @Route("/depot" , name="depot", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function depot(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -121,6 +123,7 @@ class ApiController extends AbstractController
             $compt->setDate(new \DateTime());
             $rec = $this->getDoctrine()->getRepository(Compte::class)->find($values->idcompte);
             $compt->setIdcompte($rec);
+            $rec->setSolde($rec->getSolde() + $values->montant);
             $errors = $validator->validate($compt);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
@@ -138,13 +141,14 @@ class ApiController extends AbstractController
         }
         $data = [
             'status' => 500,
-            'message' => 'Vous devez renseigner les clés username et password'
+            'message' => 'Erreur'
         ];
         return new JsonResponse($data, 500);
     }
     // update
     /**
      * @Route("/partenaire/{id}", name="update_phone", methods={"PUT"})
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -170,5 +174,21 @@ class ApiController extends AbstractController
             'message' => 'Le partenaire a bien été mis à jour'
         ];
         return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/show/{id}", name="show_partenaire", methods={"GET"})
+     */
+    public function show(Partenaire $partenaire, PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
+    {
+        $partenaire = $partenaireRepository->find($partenaire->getId());
+        $data = $serializer->serialize($partenaire, 'json', [
+            'groups' => ['show']
+        ]);
+        //var_dump($partenaire);
+         var_dump($data);
+        return new Response($data, 200, [
+            'Content-Type' => 'application/json'
+        ]);
     }
 }

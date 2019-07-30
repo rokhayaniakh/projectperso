@@ -23,7 +23,7 @@ class Compte
     /**
      * @ORM\Column(type="integer")
      */
-    private $montant;
+    private $solde;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Partenaire", mappedBy="idcompte")
@@ -56,14 +56,14 @@ class Compte
         return $this->id;
     }
 
-    public function getMontant(): ?int
+    public function getSolde(): ?int
     {
-        return $this->montant;
+        return $this->solde;
     }
 
-    public function setMontant(int $montant): self
+    public function setSolde(int $solde): self
     {
-        $this->montant = $montant;
+        $this->solde = $solde;
 
         return $this;
     }
