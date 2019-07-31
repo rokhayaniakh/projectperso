@@ -12,6 +12,6 @@ include_once $this->targetDirs[3].'/vendor/symfony/security-http/AccessMap.php';
 $this->privates['security.access_map'] = $instance = new \Symfony\Component\Security\Http\AccessMap();
 
 $instance->add(new \Symfony\Component\HttpFoundation\RequestMatcher('^/api/login'), [0 => 'IS_AUTHENTICATED_ANONYMOUSLY'], NULL);
-$instance->add(new \Symfony\Component\HttpFoundation\RequestMatcher('^/api/t'), [0 => 'IS_AUTHENTICATED_FULLY'], NULL);
+$instance->add(new \Symfony\Component\HttpFoundation\RequestMatcher('^/api'), [0 => 'IS_AUTHENTICATED_FULLY'], NULL);
 
 return $instance;
