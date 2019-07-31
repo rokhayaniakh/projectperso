@@ -59,7 +59,6 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/register", name="register", methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -68,8 +67,8 @@ class ApiController extends AbstractController
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $user->setRoles($user->getRoles());
-            // $user->setRoles(['ROLE_SUPER_ADMIN']);
+            // $user->setRoles($user->getRoles());
+            $user->setRoles(['ROLE_SUPER_ADMIN']);
             $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
             $user->setIdpartenaire($part);
             $user->setNomcomplet($values->nomcomplet);
@@ -186,7 +185,7 @@ class ApiController extends AbstractController
             'groups' => ['show']
         ]);
         //var_dump($partenaire);
-         var_dump($data);
+        var_dump($data);
         return new Response($data, 200, [
             'Content-Type' => 'application/json'
         ]);
