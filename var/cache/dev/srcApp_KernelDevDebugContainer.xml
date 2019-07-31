@@ -22,6 +22,7 @@
       <parameter key="FOSRestBundle">FOS\RestBundle\FOSRestBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
       <parameter key="LexikJWTAuthenticationBundle">Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle</parameter>
+      <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -75,6 +76,10 @@
       <parameter key="LexikJWTAuthenticationBundle" type="collection">
         <parameter key="path">/home/rokhayadiop/Documents/symfony/my_symfony/vendor/lexik/jwt-authentication-bundle</parameter>
         <parameter key="namespace">Lexik\Bundle\JWTAuthenticationBundle</parameter>
+      </parameter>
+      <parameter key="DoctrineFixturesBundle" type="collection">
+        <parameter key="path">/home/rokhayadiop/Documents/symfony/my_symfony/vendor/doctrine/doctrine-fixtures-bundle</parameter>
+        <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -409,6 +414,13 @@
         <argument type="service" id=".service_locator.CDOTD6..App\Controller\PartenaireController"/>
       </call>
     </service>
+    <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+    </service>
+    <service id="App\DataFixtures\SuperadminFixtures" class="App\DataFixtures\SuperadminFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+      <argument type="service" id="security.user_password_encoder.generic"/>
+    </service>
     <service id="App\Form\PartenaireType" class="App\Form\PartenaireType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -421,14 +433,6 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" autoconfigure="true">
-      <tag name="doctrine.repository_service"/>
-      <argument type="service" id="doctrine"/>
-    </service>
-    <service id="App\Repository\ProfilRepository" class="App\Repository\ProfilRepository" autowire="true" autoconfigure="true">
-      <tag name="doctrine.repository_service"/>
-      <argument type="service" id="doctrine"/>
-    </service>
-    <service id="App\Repository\SuperadminRepository" class="App\Repository\SuperadminRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -1466,14 +1470,6 @@
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
-        <argument>console.command</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
           <argument>configure</argument>
@@ -3190,7 +3186,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.YNuKJh."/>
+      <argument type="service" id=".service_locator.RkchLdW"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -4617,12 +4613,39 @@
     <service id="lexik_jwt_authentication.security.jwt_user_provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider" public="false">
       <argument></argument>
     </service>
+    <service id="doctrine.fixtures_load_command" class="Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand">
+      <tag name="console.command" command="doctrine:fixtures:load"/>
+      <argument type="service" id="doctrine.fixtures.loader"/>
+      <argument type="service" id="doctrine"/>
+      <call method="setName">
+        <argument>doctrine:fixtures:load</argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.loader" class="Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader" public="false">
+      <argument type="service" id="service_container"/>
+      <call method="addFixtures">
+        <argument type="collection">
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\AppFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\SuperadminFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+        </argument>
+      </call>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ApiController" class="App\Controller\ApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ApiController" class="App\Controller\ApiController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ApiController" class="App\Controller\ApiController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\SuperadminFixtures" class="App\DataFixtures\SuperadminFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\SuperadminFixtures" class="App\DataFixtures\SuperadminFixtures" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PartenaireType" class="App\Form\PartenaireType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\PartenaireType" class="App\Form\PartenaireType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CompteRepository" class="App\Repository\CompteRepository" autowire="true" abstract="true"/>
@@ -4631,10 +4654,6 @@
     <service id=".abstract.instanceof.App\Repository\DepotRepository" class="App\Repository\DepotRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ProfilRepository" class="App\Repository\ProfilRepository" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Repository\ProfilRepository" class="App\Repository\ProfilRepository" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SuperadminRepository" class="App\Repository\SuperadminRepository" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Repository\SuperadminRepository" class="App\Repository\SuperadminRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id="maker.auto_command.make_auth" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
@@ -4957,14 +4976,12 @@
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
       </argument>
     </service>
-    <service id=".service_locator.YNuKJh." class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.RkchLdW" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CompteRepository" type="service" id="App\Repository\CompteRepository"/>
         <argument key="App\Repository\DepotRepository" type="service" id="App\Repository\DepotRepository"/>
         <argument key="App\Repository\PartenaireRepository" type="service" id="App\Repository\PartenaireRepository"/>
-        <argument key="App\Repository\ProfilRepository" type="service" id="App\Repository\ProfilRepository"/>
-        <argument key="App\Repository\SuperadminRepository" type="service" id="App\Repository\SuperadminRepository"/>
         <argument key="App\Repository\UserRepository" type="service" id="App\Repository\UserRepository"/>
       </argument>
     </service>
@@ -5177,7 +5194,7 @@
     <service id=".errored..service_locator.iW_buO_.App\Entity\Partenaire" class="App\Entity\Partenaire"/>
     <service id=".errored..service_locator.xrohzKf.App\Entity\Partenaire" class="App\Entity\Partenaire"/>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
-      <argument type="service" id=".service_locator.A1Bx0QA"/>
+      <argument type="service" id=".service_locator.SrZR6To"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -5225,6 +5242,7 @@
         <argument key="server:status">web_server.command.server_status</argument>
         <argument key="lexik:jwt:check-config">lexik_jwt_authentication.check_config_command</argument>
         <argument key="lexik:jwt:generate-token">lexik_jwt_authentication.generate_token_command</argument>
+        <argument key="doctrine:fixtures:load">doctrine.fixtures_load_command</argument>
         <argument key="make:auth">maker.auto_command.make_auth</argument>
         <argument key="make:command">maker.auto_command.make_command</argument>
         <argument key="make:controller">maker.auto_command.make_controller</argument>
@@ -5245,7 +5263,7 @@
         <argument key="make:migration">maker.auto_command.make_migration</argument>
       </argument>
     </service>
-    <service id=".service_locator.A1Bx0QA" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.SrZR6To" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service" id="console.command.about"/>
@@ -5275,6 +5293,7 @@
         <argument key="doctrine.database_drop_command" type="service" id="doctrine.database_drop_command"/>
         <argument key="doctrine.database_import_command" type="service" id="doctrine.database_import_command"/>
         <argument key="doctrine.ensure_production_settings_command" type="service" id="doctrine.ensure_production_settings_command"/>
+        <argument key="doctrine.fixtures_load_command" type="service" id="doctrine.fixtures_load_command"/>
         <argument key="doctrine.generate_entities_command" type="service" id="doctrine.generate_entities_command"/>
         <argument key="doctrine.mapping_convert_command" type="service" id="doctrine.mapping_convert_command"/>
         <argument key="doctrine.mapping_import_command" type="service" id="doctrine.mapping_import_command"/>
