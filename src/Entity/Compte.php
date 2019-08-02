@@ -46,11 +46,6 @@ class Compte
     private $depots;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="idcompte")
-     */
-    private $users;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="compte")
      */
     private $utilisateurs;

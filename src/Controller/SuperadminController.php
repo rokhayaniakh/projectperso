@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\PartenaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +14,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Partenaire;
-use App\Entity\Compte;
-use App\Entity\Depot;
-use App\Entity\Profil;
-use App\Form\PartenaireType;
-use App\Repository\UserRepository;
 
 /**
  * @Route("/controller")
@@ -30,30 +24,28 @@ class SuperadminController extends AbstractController
      * @Route("/superadmin", name="superadmin" , methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-
     public function superadmin(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $values = json_decode($request->getContent());
         if (isset($values->username, $values->password)) {
-            $user = new User();
-            $user->setUsername($values->username);
-            $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            // $user->setRoles($user->getRoles());
-            $user->setRoles(['ROLE_CAISSIER']);
+            $use = new User();
+            $use->setUsername($values->username);
+            $use->setPassword($passwordEncoder->encodePassword($use, $values->password));
+            $use->setRoles(['ROLE_CAISSIER']);
             $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
-            $user->setIdpartenaire($part);
-            $user->setNomcomplet($values->nomcomplet);
-            $user->setMail($values->mail);
-            $user->setTel($values->tel);
-            $user->getAdresse($values->adresse);
-            $errors = $validator->validate($user);
+            $use->setIdpartenaire($part);
+            $use->setNomcomplet($values->nomcomplet);
+            $use->setMail($values->mail);
+            $use->setTel($values->tel);
+            $use->getAdresse($values->adresse);
+            $errors = $validator->validate($use);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
                 return new Response($errors, 500, [
                     'Content-Type' => 'application/json'
                 ]);
             }
-            $entityManager->persist($user);
+            $entityManager->persist($use);
             $entityManager->flush();
 
             $data = [
@@ -67,5 +59,16 @@ class SuperadminController extends AbstractController
             'message' => 'Erreur'
         ];
         return new JsonResponse($data, 500);
+    }
+    /**
+     * @Route("/login", name="login", methods={"POST"})
+     */
+    public function login(Request $request)
+    {
+        $user = $this->getUser();
+        return $this->json([
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles()
+        ]);
     }
 }

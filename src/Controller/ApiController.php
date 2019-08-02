@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,44 +37,44 @@ class ApiController extends AbstractController
     public function ajoutp(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());
+        $random=random_int(100000,999999);
         if (isset($values->nom, $values->rs)) {
-            $ad=new User();
             $us = new Partenaire();
-            $com=new Compte();
-            $ad->setUsername($values->username);
-            $ad->setRoles($us->getRoles());
-            $ad->setPassword($passwordEncoder->encodePassword($ad, $values->password));
             $us->setNom($values->nom);
             $us->setRs($values->rs);
             $us->setNinea($values->ninea);
             $us->setAdresse($values->adresse);
             $us->setStatut($values->statut);
-            $entityManager->persist($us);
-            $entityManager->flush();
-            $entityManager->persist($ad);
-            $entityManager->flush();
-            // $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->getId());
-            // $com->setIdpartenaire($part);
-            // $com->setSolde($values->solde);
-            $com->setNumbcompte($values->numbcompte);
+
+            $com = new Compte();
+            $com->setIdpartenaire($us);
+            $com->setNumbcompte($random);
+
+            $ad=new User();
+            $ad->setIdpartenaire($us);
+            $ad->setCompte($com);
+            $ad->setUsername($values->username);
+            $ad->setRoles($us->getRoles());
+            $ad->setPassword($passwordEncoder->encodePassword($ad, $values->password));
             $entityManager->persist($com);
+            $entityManager->persist($ad);
+            $entityManager->persist($us);
             $entityManager->flush();
 
 
             $data = [
-                'status' => 201,
-                'message' => 'Le partenaire  a été créé'
+                'statuss' => 201,
+                'messages' => 'Le partenaire  a été créé'
             ];
 
             return new JsonResponse($data, 201);
         }
         $data = [
-            'status' => 500,
-            'message' => 'Erreur!!'
+            'statusss' => 500,
+            'messagess' => 'Erreur!!'
         ];
         return new JsonResponse($data, 500);
     }
-    // authentification
 
     /**
      * @Route("/register", name="register", methods={"POST"})
@@ -85,36 +87,37 @@ class ApiController extends AbstractController
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $user->setRoles($user->getRoles());
-            // $user->setRoles(['ROLE_SUPER_ADMIN']);
+            $user->setRoles($values->roles);
             $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->idpartenaire);
             $user->setIdpartenaire($part);
             $user->setNomcomplet($values->nomcomplet);
             $user->setMail($values->mail);
             $user->setTel($values->tel);
             $user->setAdresse($values->adresse);
+            $rec = $this->getDoctrine()->getRepository(Compte::class)->find($values->compte);
+            $user->setCompte($rec);
             $errors = $validator->validate($user);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
-                return new Response($errors, 500, [
-                    'Content-Type' => 'application/json'
-                ]);
+                return new Response($errors, 500);
             }
             $entityManager->persist($user);
             $entityManager->flush();
 
             $data = [
-                'status' => 201,
-                'message' => 'L\'utilisateur a été créé'
+                'statu' => 201,
+                'messag' => 'L\'utilisateur a été créé'
             ];
             return new JsonResponse($data, 201);
         }
         $data = [
-            'status' => 500,
-            'message' => 'Erreur'
+            'stat' => 500,
+            'mess' => 'Erreur'
         ];
         return new JsonResponse($data, 500);
     }
+
+     // authentification
     
     /**
      * @Route("/login", name="login", methods={"POST"})
@@ -129,13 +132,14 @@ class ApiController extends AbstractController
     }
     /** 
      * @Route("/depot" , name="depot", methods={"POST"})
-     * @IsGranted("ROLE_CAISSIER")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function depot(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $values = json_decode($request->getContent());
-        if (isset($values->montant)) {
+        if (isset($values->montant)){
             $compt = new Depot();
+            if($values->montant>=75000){
             $compt->setMontant($values->montant);
             $compt->setDate(new \DateTime());
             $rec = $this->getDoctrine()->getRepository(Compte::class)->find($values->idcompte);
@@ -144,21 +148,20 @@ class ApiController extends AbstractController
             $errors = $validator->validate($compt);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
-                return new Response($errors, 500, [
-                    'Content-Type' => 'application/json'
-                ]);
+                return new Response($errors, 500);
+            }
             }
             $entityManager->persist($compt);
             $entityManager->flush();
             $data = [
-                'status' => 201,
-                'message' => 'depot reussie'
+                'stat' => 201,
+                'sms' => 'depot reussie'
             ];
             return new JsonResponse($data, 201);
         }
         $data = [
-            'status' => 500,
-            'message' => 'Erreur'
+            'sta' => 500,
+            'messg' => 'Erreur'
         ];
         return new JsonResponse($data, 500);
     }
@@ -181,9 +184,7 @@ class ApiController extends AbstractController
         $errors = $validator->validate($phoneUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
-                'Content-Type' => 'application/json'
-            ]);
+            return new Response($errors, 500);
         }
         $entityManager->flush();
         $data = [
@@ -202,11 +203,8 @@ class ApiController extends AbstractController
         $data = $serializer->serialize($partenaire, 'json', [
             'groups' => ['show']
         ]);
-        //var_dump($partenaire);
         var_dump($data);
-        return new Response($data, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+        return new Response($data, 200);
     }
     /** 
      * @Route("/bloquer" , name="bloquer", methods={"POST"})
@@ -224,4 +222,4 @@ class ApiController extends AbstractController
         ];
         return new JsonResponse($data);
     }
-} 
+}
