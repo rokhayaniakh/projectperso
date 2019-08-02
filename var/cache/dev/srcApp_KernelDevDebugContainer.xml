@@ -414,6 +414,13 @@
         <argument type="service" id=".service_locator.CDOTD6..App\Controller\PartenaireController"/>
       </call>
     </service>
+    <service id="App\Controller\SuperadminController" class="App\Controller\SuperadminController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.CDOTD6..App\Controller\SuperadminController"/>
+      </call>
+    </service>
     <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
       <tag name="doctrine.fixture.orm"/>
     </service>
@@ -4642,6 +4649,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PartenaireController" class="App\Controller\PartenaireController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SuperadminController" class="App\Controller\SuperadminController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SuperadminController" class="App\Controller\SuperadminController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SuperadminController" class="App\Controller\SuperadminController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\SuperadminFixtures" class="App\DataFixtures\SuperadminFixtures" autowire="true" abstract="true"/>
@@ -4851,6 +4861,13 @@
         <argument key="serializer" type="service" id="serializer"/>
       </argument>
     </service>
+    <service id=".service_locator.U2OyWts" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service" id="doctrine.orm.default_entity_manager"/>
+        <argument key="userRepo" type="service" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.0VWx6lC" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -4863,10 +4880,11 @@
         <argument key="partenaire" type="service" id=".errored..service_locator.xrohzKf.App\Entity\Partenaire"/>
       </argument>
     </service>
-    <service id=".service_locator.87H21QC" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.L1BB.Os" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\ApiController::ajoutp" type="service" id=".service_locator.JBoVXlr"/>
+        <argument key="App\Controller\ApiController::bloquer" type="service" id=".service_locator.U2OyWts"/>
         <argument key="App\Controller\ApiController::depot" type="service" id=".service_locator.H3qnu8f"/>
         <argument key="App\Controller\ApiController::register" type="service" id=".service_locator.H3qnu8f"/>
         <argument key="App\Controller\ApiController::show" type="service" id=".service_locator.iW_buO_"/>
@@ -4875,7 +4893,9 @@
         <argument key="App\Controller\PartenaireController::edit" type="service" id=".service_locator.xrohzKf"/>
         <argument key="App\Controller\PartenaireController::index" type="service" id=".service_locator.0VWx6lC"/>
         <argument key="App\Controller\PartenaireController::show" type="service" id=".service_locator.xrohzKf"/>
+        <argument key="App\Controller\SuperadminController::superadmin" type="service" id=".service_locator.H3qnu8f"/>
         <argument key="App\Controller\ApiController:ajoutp" type="service" id=".service_locator.JBoVXlr"/>
+        <argument key="App\Controller\ApiController:bloquer" type="service" id=".service_locator.U2OyWts"/>
         <argument key="App\Controller\ApiController:depot" type="service" id=".service_locator.H3qnu8f"/>
         <argument key="App\Controller\ApiController:register" type="service" id=".service_locator.H3qnu8f"/>
         <argument key="App\Controller\ApiController:show" type="service" id=".service_locator.iW_buO_"/>
@@ -4884,6 +4904,7 @@
         <argument key="App\Controller\PartenaireController:edit" type="service" id=".service_locator.xrohzKf"/>
         <argument key="App\Controller\PartenaireController:index" type="service" id=".service_locator.0VWx6lC"/>
         <argument key="App\Controller\PartenaireController:show" type="service" id=".service_locator.xrohzKf"/>
+        <argument key="App\Controller\SuperadminController:superadmin" type="service" id=".service_locator.H3qnu8f"/>
       </argument>
     </service>
     <service id=".service_locator.LtnrEkg" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -5044,6 +5065,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.CDOTD6." method="withContext"/>
     </service>
+    <service id=".service_locator.CDOTD6..App\Controller\SuperadminController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\SuperadminController"/>
+      <argument>App\Controller\SuperadminController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.CDOTD6." method="withContext"/>
+    </service>
     <service id=".service_locator.MAfdX1A" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -5148,12 +5175,12 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.87H21QC"/>
+      <argument type="service" id=".service_locator.L1BB.Os"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.87H21QC"/>
+      <argument type="service" id=".service_locator.L1BB.Os"/>
     </service>
     <service id="api_platform.swagger.normalizer.api_gateway.inner" class="ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer" public="false">
       <argument type="service" id="api_platform.metadata.resource.metadata_factory.cached"/>
@@ -5507,7 +5534,7 @@
     <service id="lexik_jwt_authentication.encoder" alias="lexik_jwt_authentication.encoder.lcobucci" public="true"/>
     <service id="Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface" alias="lexik_jwt_authentication.encoder.lcobucci"/>
     <service id="lexik_jwt_authentication.key_loader" alias="lexik_jwt_authentication.key_loader.raw" public="true"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.87H21QC"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.L1BB.Os"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="api_platform.name_converter" alias="serializer.name_converter.metadata_aware"/>

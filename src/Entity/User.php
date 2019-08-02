@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Partenaire;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -59,6 +61,21 @@ class User implements UserInterface
      */
     private $idpartenaire;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\compte", inversedBy="utilisateurs")
+     */
+    private $compte;
+
+    public function __construct()
+    {
+        $this->idcompte = new ArrayCollection();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -191,4 +208,30 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCompte(): ?compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?compte $compte): self
+    {
+        $this->compte = $compte;
+
+        return $this;
+    }
+
+    
 }

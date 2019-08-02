@@ -47,4 +47,5 @@ class PartenaireRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

@@ -4,7 +4,6 @@
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Routing\\Annotation\\Route'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Routing\\Annotation\\Route')),
             clone ($p['Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted')),
-            clone $p['Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted'],
         ],
         null,
         [
@@ -23,15 +22,13 @@
             ],
             'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted' => [
                 'attributes' => [
-                    1 => 'ROLE_SUPER_ADMIN',
-                    'ROLE_ADMIN',
+                    1 => 'ROLE_ADMIN',
                 ],
             ],
         ],
         [
             $o[0],
             $o[1],
-            $o[2],
         ],
         []
     );

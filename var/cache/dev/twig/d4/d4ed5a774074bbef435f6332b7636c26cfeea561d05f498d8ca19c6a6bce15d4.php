@@ -183,6 +183,6 @@ class __TwigTemplate_315a99d77a1680e0bd9965264bd9c3bfdc2e260611291ce47d152bbc1af
         </div>
     </div>
 </div>
-", "@Twig/Exception/traces.html.twig", "/home/rokhayadiop/Documents/symfony/my_symfony/vendor/symfony/twig-bundle/Resources/views/Exception/traces.html.twig");
+", "@Twig/Exception/traces.html.twig", "/var/www/html/evaluation1/vendor/symfony/twig-bundle/Resources/views/Exception/traces.html.twig");
     }
 }

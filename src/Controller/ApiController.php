@@ -6,19 +6,21 @@ use App\Entity\User;
 use App\Repository\PartenaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\PartenairePasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Partenaire;
 use App\Entity\Compte;
 use App\Entity\Depot;
 use App\Entity\Profil;
-use Symfony\Component\HttpFoundation\Response;
 use App\Form\PartenaireType;
+use App\Repository\UserRepository;
 
 /**
  * @Route("/api")
@@ -34,13 +36,28 @@ class ApiController extends AbstractController
     {
         $values = json_decode($request->getContent());
         if (isset($values->nom, $values->rs)) {
+            $ad=new User();
             $us = new Partenaire();
+            $com=new Compte();
+            $ad->setUsername($values->username);
+            $ad->setRoles($us->getRoles());
+            $ad->setPassword($passwordEncoder->encodePassword($ad, $values->password));
             $us->setNom($values->nom);
             $us->setRs($values->rs);
             $us->setNinea($values->ninea);
             $us->setAdresse($values->adresse);
+            $us->setStatut($values->statut);
             $entityManager->persist($us);
             $entityManager->flush();
+            $entityManager->persist($ad);
+            $entityManager->flush();
+            // $part = $this->getDoctrine()->getRepository(Partenaire::class)->find($values->getId());
+            // $com->setIdpartenaire($part);
+            // $com->setSolde($values->solde);
+            $com->setNumbcompte($values->numbcompte);
+            $entityManager->persist($com);
+            $entityManager->flush();
+
 
             $data = [
                 'status' => 201,
@@ -60,7 +77,6 @@ class ApiController extends AbstractController
     /**
      * @Route("/register", name="register", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
-     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -76,7 +92,7 @@ class ApiController extends AbstractController
             $user->setNomcomplet($values->nomcomplet);
             $user->setMail($values->mail);
             $user->setTel($values->tel);
-            $user->getAdresse($values->adresse);
+            $user->setAdresse($values->adresse);
             $errors = $validator->validate($user);
             if (count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
@@ -99,6 +115,7 @@ class ApiController extends AbstractController
         ];
         return new JsonResponse($data, 500);
     }
+    
     /**
      * @Route("/login", name="login", methods={"POST"})
      */
@@ -191,4 +208,20 @@ class ApiController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
-}
+    /** 
+     * @Route("/bloquer" , name="bloquer", methods={"POST"})
+     */
+    public function bloquer(Request $request, UserRepository $userRepo, EntityManagerInterface $entityManager): Response
+    {
+        $values = json_decode($request->getContent());
+        $user = $userRepo->findOneByUsername($values->username);
+        $user->SetStatus("bloquer");
+        $user->SetRoles(["ROLE_USERLOCK"]);
+        $entityManager->flush();
+        $data = [
+            'status' => 200,
+            'message' => 'utilisateurs bloquer'
+        ];
+        return new JsonResponse($data);
+    }
+} 

@@ -21,7 +21,7 @@ class Compte
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer" , nullable=true)
      */
     private $solde;
 
@@ -45,10 +45,21 @@ class Compte
      */
     private $depots;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="idcompte")
+     */
+    private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="compte")
+     */
+    private $utilisateurs;
+
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
         $this->depots = new ArrayCollection();
+        $this->utilisateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,4 +164,37 @@ class Compte
 
         return $this;
     }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(User $utilisateur): self
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(User $utilisateur): self
+    {
+        if ($this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs->removeElement($utilisateur);
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getCompte() === $this) {
+                $utilisateur->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }
